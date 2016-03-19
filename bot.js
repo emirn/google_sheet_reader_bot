@@ -17,7 +17,7 @@ else {
 //var Bot = require('node-telegram-bot-api'),
 //    bot = new Bot(config.TelegramToken, { polling: true });
 
-console.log('google_doc_reader_bot server started...');
+console.log('secon-bot server started...');
 
 // Make sure it is public or set to Anyone with link can view 
 // "od6" is the fist worksheet in the spreadsheet
@@ -39,16 +39,19 @@ bot.onText(/(.+)$/, function (msg, match) {
         }
         
         var parsed = JSON.parse(body);
-        var targetTime = -1;
+        var targetTime = NaN;
         if (!isNaN(keywords))   // isNaN returns false if the value is number
         {
             try{
                 targetTime = parseInt(keywords, 10);
             }
             catch(e){
-                targetTime = -1;
+                targetTime = NaN;
             }
         }
+        
+        if (isNaN(targetTime))
+            targetTime = -1;
         
         var formattedAnswer = "";
     
@@ -61,17 +64,37 @@ bot.onText(/(.+)$/, function (msg, match) {
         // sending answers
         parsed.feed.entry.forEach(function(item){
                 // get the time(in hours) from the very first column
-                var itemTime = parseInt(item.title.$t, 10);
-                if (itemTime == targetTime){
+                var itemTime = NaN;
+                var itemTitle = item.title.$t
+                try{
+                    itemTime = parseInt(itemTitle, 10);
+                }
+                catch(e)
+                {
+                    itemTime = NaN;
+                }
+                
+                if (
+                    (!isNaN(itemTime) && itemTime == targetTime) ||
+                    (isNaN(itemTime) && itemTitle.toLowerCase().trim() == keywords.toLowerCase().trim())
+                    )
+                {
                     // add the line break if not the first answer
-                    if (itemsFound >0) formattedAnswer += "\n\n";
+                    if (itemsFound==0) 
+                        formattedAnswer += "At " + targetTime + " these talks will take place:\n\n";
+                    else 
+                        formattedAnswer += "\n\n";
+                        
                     itemsFound++;
                     formattedAnswer += '\u27a1' + item.content.$t; // add item content, '\u27a1' is the arrow emoji
                 }
                 else if (currentHours == itemTime) // else collect items for the current hour
                 {
-                    if (currentAnswer != '')
+                    if (currentAnswer == '')
+                        currentAnswer == 'Starting from ' + currentHours + " h the following talks are goinf:\n\n";
+                    else 
                         currentAnswer += "\n\n"; 
+                        
                     currentAnswer += '\u27a1' + item.content.$t; // get item content, '\u27a1' is the arrow emoji
                 }
                 
@@ -82,14 +105,14 @@ bot.onText(/(.+)$/, function (msg, match) {
         if (itemsFound == 0)
         {
             if (targetTime<0 || targetTime>24)
-                formattedAnswer = "Incorrect hours entered. Enter hours from 0 to 24 to get a list of talks at the given hour.\n\n";
+                formattedAnswer = "Enter the time to show talks or write 'Hi'.\n\n";
             else 
-                formattedAnswer = "No talks found for the given time ( " + targetTime+ " h)";
+                formattedAnswer = "Can't find events for the given time ( " + targetTime+ " ч)";
                 
             // output current answer
             if (currentAnswer != '')
             {
-                formattedAnswer += "Currently (" + currentHours + ":" + currentMinutes + ") we have these talks:\n";
+                formattedAnswer += "Hi! As of " + currentHours + ":" + currentMinutes + " " + config.confTimeZone+ " these talks are going:\n";
                 formattedAnswer += currentAnswer;
             }
         }
