@@ -4,8 +4,8 @@ Telegram bot to get data from Google Sheet, checks the very first column for tim
 ## steps to use
 
 ### 1. Create Google Sheet with the data. The very first column is treated as a key for the start time of event. You may have multiple rows with the same key, all of them they will be displayed then.
-| Start Time  | Where      | Description |Author |
-| ------- | ---------------- | ---------------- |
+| Start Time  | Where           | Description | Author |
+| ----------  | --------------- | ---------------- | -----|
 | 9  | red room | first talk description |John Doe|
 | 10 | red room | talk about javascript |Jack Black|
 | 11 | red room  | some marketing talk bs |William White|
