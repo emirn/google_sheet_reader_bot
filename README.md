@@ -13,9 +13,9 @@ Telegram bot to get data from Google Sheet, checks the very first column for tim
 | 10 | green room | networking and coffee |Bob Will|
 | 11 | green room  | some use case for node.js |Diana White|
 
-#### 2. Make this Google sheet as public or vieweable to anyone
+#### 2. Publish this Google sheet (File - Publish To Web - OK)
 #### 3. Create a new app on heroku (say, "myapp-bot-app")
-#### 4. Register telegram bot (send **/newbot** commmand to register bot with [https://telegram.me/BotFather](@BotFather) in Telegram) and get its APIKEY.
+#### 4. Register telegram bot (send **/newbot** commmand to register bot with [https://telegram.me/BotFather](@BotFather) in Telegram) and copy token for newly created bot.
 #### 5. Copy `config.js.example` into `config.js`
 #### 6. Fill values in `config.js` to set:
 
