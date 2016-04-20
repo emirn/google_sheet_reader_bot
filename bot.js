@@ -54,6 +54,9 @@ bot.onText(/(.+)$/, function (msg, match) {
             targetTime = -1;
         
         var formattedAnswer = "";
+        
+        // debug purposes: echo from id: 
+        // formattedAnswer += "\nMsg.from.id=" + msg.from.id + "\n";
     
         var currentHours = parseInt(moment().tz(config.confTimeZone).format('HH'),10);
         var currentMinutes = parseInt(moment().tz(config.confTimeZone).format('mm'),10);
